@@ -1,37 +1,40 @@
-# 開発環境テンプレート
+# 勤怠管理アプリ(Attendance-App)
 
-MySQL・phpMyAdmin を含む Laravel 開発環境のテンプレート 
+ユーザーの勤怠と管理を行う勤怠管理アプリ
 
----
+## 主な機能
+> - **ユーザー**会員登録・ログイン・ログアウト
+> - 勤怠の打刻（出勤・休憩・退勤）
+> - 勤務情報取得
+> - 勤怠の修正申請
+> - 申請のステータス確認（承認待ち・承認済み）
+> - **管理者**　ログイン・ログアウト
+> - 日時勤怠一覧の確認
+> - 各勤怠の詳細を確認・修正
+> - スタッフ一覧とスタッフ毎の月次勤怠一覧の確認
+
 
 ## 環境構築
 
+1. リポジトリをクローン
 ```bash
-1. git clone リポジトリURL
-2. docker compose up -d --build
+git clone git@github.com:YuHirasaka/Attendance-app.git
 ```
-
-＊Mysqlは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
-
-Laravel環境構築
-
+2. Dockerを起動する
+3. プロジェクト直下で、以下のコマンドを実行する
 ```bash
-  1. docker compose exec php bash
-  2. composer install
-  3. cp .env.example .env (.env.exampleから.envを作成し、環境変数を変更)
-  4. php artisan key:generate
-  5. php artisan migrate
-  6. php artisan db:seed
+make init
 ```
-
 ---
 
 ## 使用技術
 
-- php　8.1
+- docker
+- php　8.1.34
 - nginx 1.21.1
-- mysql 8.0
-- laravel 8.75
+- mysql 8.0.26
+- laravel 8.83.29
+- mailtrap
 
 ---
 
@@ -39,3 +42,72 @@ Laravel環境構築
 
 - 開発環境：http://localhost/
 - phpMyAdmin：http://localhost:8080/
+- Mailtrap（メール確認用サンドボックス）：https://mailtrap.io/inboxes
+
+## テーブル仕様
+### usersテーブル
+| カラム名 | 型 | primary key | unique key | not null | foreign key |
+| --- | --- | --- | --- | --- | --- |
+| id | bigint | ◯ |  | ◯ |  |
+| name | varchar(20) |  |  | ◯ |  |
+| email | varchar(255) |  | ◯ | ◯ |  |
+| password | varchar(255) |  |  | ◯ |  |
+| role | enum(user.admin) |  |  | ◯ |  |
+| email_verified_at | timestamp |  |  |  |  |
+| remember_token | varchar(100) |  |  |  |  |
+| created_at | timestamp |  |  |  |  |
+| updated_at | timestamp |  |  |  |  |
+
+
+### attendancesテーブル
+| カラム名 | 型 | primary key | unique key | not null | foreign key |
+| --- | --- | --- | --- | --- | --- |
+| id | bigint | ◯ |  | ◯ |  |
+| user_id | bigint |  |  | ◯ | users(id) |
+| work_date | date |  |  | ◯ |  |
+| check_in | time |  |  | ◯ |  |
+| check_out | time |  |  |  |  |
+| note | varchar(255) |  |  |  |  |
+| created_at | timestamp |  |  |  |  |
+| updated_at | timestamp |  |  |  |  |
+
+### attendance_breaksテーブル
+| カラム名 | 型 | primary key | unique key | not null | foreign key |
+| --- | --- | --- | --- | --- | --- |
+| id | bigint | ◯ |  | ◯ |  |
+| attendance_id | bigint |  |  | ◯ | attendances(id) |
+| break_start | time |  |  | ◯ |  |
+| break_end |  |  |  |  |  |
+| created_at | timestamp |  |  |  |  |
+| updated_at | timestamp |  |  |  |  |
+
+### attendance_correctionsテーブル
+| カラム名 | 型 | primary key | unique key | not null | foreign key |
+| --- | --- | --- | --- | --- | --- |
+| id | bigint | ◯ |  | ◯ |  |
+| attendance_id | bigint |  | ◯ | ◯ | attendances(id) |
+| requested_check_in | time |  |  | ◯ |  |
+| requested_check_out | time |  |  | ◯ |  |
+| reason | varchar(255) |  |  | ◯ |  |
+| status | enum(pending.approved) |  |  | ◯ |  |
+| approved_by | bigint |  |  |  | users(id) |
+| approved_at | timestamp |  |  |  |  |
+| created_at | timestamp |  |  |  |  |
+| updated_at | timestamp |  |  |  |  |
+
+## attendance_correction_breaksテーブル
+| カラム名 | 型 | primary key | unique key | not null | foreign key |
+| --- | --- | --- | --- | --- | --- |
+| id | bigint | ◯ |  | ◯ |  |
+| attendance_correction_id |  |  |  | ◯ | attendance_corrections(id) |
+| requested_break_start |  |  |  | ◯ |  |
+| requested_break_end |  |  |  | ◯  |  |
+| created_at | timestamp |  |  |  |  |
+| updated_at | timestamp |  |  |  |  |
+
+## ER図
+![ER図](er.png)
+
+## テストアカウント
+
+## php unitテスト
