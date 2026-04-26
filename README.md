@@ -77,7 +77,7 @@ make init
 | id | bigint | ◯ |  | ◯ |  |
 | attendance_id | bigint |  |  | ◯ | attendances(id) |
 | break_start | time |  |  | ◯ |  |
-| break_end |  |  |  |  |  |
+| break_end | time |  |  |  |  |
 | created_at | timestamp |  |  |  |  |
 | updated_at | timestamp |  |  |  |  |
 
@@ -99,9 +99,9 @@ make init
 | カラム名 | 型 | primary key | unique key | not null | foreign key |
 | --- | --- | --- | --- | --- | --- |
 | id | bigint | ◯ |  | ◯ |  |
-| attendance_correction_id |  |  |  | ◯ | attendance_corrections(id) |
-| requested_break_start |  |  |  | ◯ |  |
-| requested_break_end |  |  |  | ◯  |  |
+| attendance_correction_id | bigint |  |  | ◯ | attendance_corrections(id) |
+| requested_break_start | time |  |  | ◯ |  |
+| requested_break_end | time |  |  | ◯  |  |
 | created_at | timestamp |  |  |  |  |
 | updated_at | timestamp |  |  |  |  |
 
