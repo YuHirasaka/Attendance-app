@@ -10,6 +10,15 @@ ul {
     margin: 0;
 }
 
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    appearance: none;
+}
+
 .header {
     background: #000000;
     width: 100%;
@@ -54,4 +63,12 @@ ul {
 .header__nav li:hover,
 .header__logout:hover{
     font-weight: 900;
+}
+
+.btn {
+    border: none;
+    border-radius: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 20px;
 }
