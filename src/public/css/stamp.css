@@ -1,5 +1,5 @@
 body {
-    background: rgb(247, 246, 246);
+    background: rgb(234, 232, 232);
 }
 
 .attendance {
@@ -30,9 +30,27 @@ body {
     margin-bottom: 0;
 }
 
+.attendance-card__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+}
+
 .attendance-card__button {
     width: 221px;
     background: #000;
     color: #fff;
     margin-top: 90px;
+}
+
+.attendance-card__button-break {
+    width: 221px;
+    background: #fff;
+    color: #000;
+    margin-top: 90px;
+}
+
+.attendance-card__text {
+    margin-top: 100px;
 }
