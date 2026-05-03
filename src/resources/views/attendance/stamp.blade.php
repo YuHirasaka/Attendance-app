@@ -11,13 +11,34 @@
 @include('components.header')
 <div class="attendance">
     <section class="attendance-card">
-        <p class="attendance-card__status">勤務外</p>
+        <p class="attendance-card__status">{{ $status }}</p>
         <p id="date" class="attendance-card__date"></p>
         <h1 id="nowTime" class="attendance-card__time"></h1>
-        <form action="/attendance" method="post">
-            @csrf
-            <button class="btn attendance-card__button">出勤</button>
-        </form>
+        @if ($status === \App\Models\Attendance::STATUS_DONE)
+            <h1 class="attendance-card__text">お疲れ様でした。</h1>
+        @elseif ($status === \App\Models\Attendance::STATUS_BREAK)
+            <form action="/attendance/break-end" method="post">
+                @csrf
+                <button class="btn attendance-card__button-break">休憩戻</button>
+            </form>
+        @elseif ($status === \App\Models\Attendance::STATUS_WORKING)
+            <div class="attendance-card__actions">
+                <form action="/attendance/check-out" method="post">
+                    @csrf
+                    <button class="btn attendance-card__button">退勤</button>
+                </form>
+
+                <form action="/attendance/break-start" method="post">
+                    @csrf
+                    <button class="btn attendance-card__button-break">休憩入</button>
+                </form>
+            </div>
+        @else
+            <form action="/attendance/check-in" method="post">
+                @csrf
+                <button class="btn attendance-card__button">出勤</button>
+            </form>
+        @endif
     </section>
 </div>
 <script>
