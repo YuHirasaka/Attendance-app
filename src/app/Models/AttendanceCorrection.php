@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Attendance;
+use App\Models\AttendanceCorrectionBreak;
+use App\Models\User;
 
 class AttendanceCorrection extends Model
 {
