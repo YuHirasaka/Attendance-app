@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Requests\EmailVerificationRequest;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\AttendanceController;
@@ -19,6 +19,10 @@ use App\Http\Controllers\AttendanceController;
 */
 Route::middleware(['auth', 'verified'])->group(function (){
     Route::get('/attendance', [AttendanceController::class, 'show'])->name('attendance.show');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check_in');
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check_out');
+    Route::post('/attendance/break-start', [AttendanceController::class, 'startBreak'])->name('attendance.break_start');
+    Route::post('/attendance/break-end', [AttendanceController::class, 'endBreak'])->name('attendance.break_end');
 });
 
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
@@ -30,7 +34,7 @@ Route::get('/email/verify', function() {
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
-    return redirect()->route('mypage.profile');
+    return redirect()->route('attendance.show');
 })->middleware(['signed'])->name('verification.verify');
 
 Route::post('email/verification-notification', function (Request $request) {
