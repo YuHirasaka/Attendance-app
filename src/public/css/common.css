@@ -72,3 +72,7 @@ button {
     font-weight: bold;
     padding: 20px;
 }
+
+#toast-container.toast-top-left {
+    top: 100px;
+}
