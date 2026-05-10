@@ -6,9 +6,9 @@
     <nav class="header__nav">
         <ul class="header__nav-list">
             @if(Auth::check() && Auth::user()->role === 'user')
-            <li class="header__nav-item"><a href="/">勤怠</a></li>
-            <li class="header__nav-item"><a href="">勤怠一覧</a></li>
-            <li class="header__nav-item"><a href="">申請</a></li>
+            <li class="header__nav-item"><a href="/attendance">勤怠</a></li>
+            <li class="header__nav-item"><a href="/attendance/list">勤怠一覧</a></li>
+            <li class="header__nav-item"><a href="/stamp_correction_request/list">申請</a></li>
             @elseif(Auth::check() && Auth::user()->role === 'admin')
             <li class="header__nav-item"><a href="">勤怠一覧</a></li>
             <li class="header__nav-item"><a href="">スタッフ一覧</a></li>
