@@ -13,14 +13,14 @@
         <h1>勤怠一覧</h1>
     </div>
     <div class="attendance-list__month-nav">
-        <a href="" class="attendance-list__month-link">
+        <a href="{{ route('attendance.index', ['month' => $prevMonth]) }}" class="attendance-list__month-link">
             前月
         </a>
         <div class="attendance-list__month">
             <img src="{{ asset('img/image.png')}}" alt="icon">
-            <p>2023/06</p>
+            <p>{{ $currentMonth->format('Y/m') }}</p>
         </div>
-        <a href="" class="attendance-list__month-link">
+        <a href="{{ route('attendance.index', ['month' => $nextMonth]) }}" class="attendance-list__month-link">
             翌月
         </a>
     </div>
@@ -46,8 +46,8 @@
                 <td>{{ $day->format('m/d') }}({{ $day->isoFormat('ddd')}})</td>
                 <td>{{ $attendance?->check_in?->format('H:i') }}</td>
                 <td>{{ $attendance?->check_out?->format('H:i') }}</td>
-                <td>1:00</td>
-                <td>8:00</td>
+                <td>{{ $attendance?->break_time }}</td>
+                <td>{{ $attendance?->work_time }}</td>
                 <td>
                     @if($attendance)
                     <a href="/attendance/detail/{{$attendance->id}}" class="attendance-list__table-detail">詳細</a>
