@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\AttendanceCorrection;
 use App\Models\AttendanceBreak;
+use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -58,5 +59,50 @@ class Attendance extends Model
         } else {
             return self::STATUS_NOT_WORKING;
         }
+    }
+
+    public function getBreakMinutes(): int
+    {
+        return $this->breaks->sum(function ($break) {
+            if (!$break->break_start || !$break->break_end){
+                return 0;
+            }
+            return Carbon::parse($break->break_start)
+                ->diffInMinutes($break->break_end);
+        });
+    }
+
+    public function getWorkingMinutes(): int
+    {
+        if (!$this->check_in || !$this->check_out) {
+            return 0;
+        }
+
+        $workMinutes = Carbon::parse($this->check_in)
+            ->diffInMinutes($this->check_out);
+
+        return $workMinutes - $this->getBreakMinutes();
+    }
+
+    public function getBreakTimeAttribute(): string
+    {
+        $minutes = $this->getBreakMinutes();
+
+        $hours = floor($minutes / 60);
+
+        $minutes = $minutes % 60;
+
+        return sprintf('%d:%02d', $hours, $minutes);
+    }
+
+    public function getWorkTimeAttribute(): string
+    {
+        $minutes = $this->getWorkingMinutes();
+
+        $hours = floor($minutes / 60);
+
+        $minutes = $minutes % 60;
+
+        return sprintf('%d:%02d', $hours, $minutes);
     }
 }
