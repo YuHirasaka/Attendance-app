@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -74,5 +75,41 @@ class AttendanceController extends Controller
         ]);
 
         return redirect('/attendance')->with('flashSuccess', '休憩から戻りました！');
+    }
+
+    public function index()
+    {
+        $currentMonth = request('month')
+        ? Carbon::parse(request('month'))
+        : Carbon::now();
+
+        $start = $currentMonth->copy()->startOfMonth();
+        $end = $currentMonth->copy()->endOfMonth();
+
+        $days = collect();
+
+        for ($date = $start; $date <= $end; $date->addDay()) {
+            $days->push($date->copy());
+        }
+
+        $attendances = Attendance::where('user_id', auth()->id())
+            ->whereYear('work_date', $currentMonth->year)
+            ->whereMonth('work_date', $currentMonth->month)
+            ->get()
+            ->keyBy(function ($attendance) {
+                return Carbon::parse($attendance->work_date)
+                    ->format('Y-m-d');
+            });
+
+        return view('attendance.index', compact(
+            'currentMonth',
+            'days',
+            'attendances'
+        ));
+    }
+
+    public function edit(Attendance $attendance)
+    {
+        return view('attendance.edit', compact('attendance'));
     }
 }
