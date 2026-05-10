@@ -83,6 +83,14 @@ class AttendanceController extends Controller
         ? Carbon::parse(request('month'))
         : Carbon::now();
 
+        $prevMonth = $currentMonth->copy()
+            ->subMonth()
+            ->format('Y-m');
+
+        $nextMonth = $currentMonth->copy()
+            ->addMonth()
+            ->format('Y-m');
+
         $start = $currentMonth->copy()->startOfMonth();
         $end = $currentMonth->copy()->endOfMonth();
 
@@ -103,6 +111,8 @@ class AttendanceController extends Controller
 
         return view('attendance.index', compact(
             'currentMonth',
+            'prevMonth',
+            'nextMonth',
             'days',
             'attendances'
         ));
