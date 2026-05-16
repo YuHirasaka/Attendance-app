@@ -78,7 +78,7 @@ class Attendance extends Model
             return 0;
         }
 
-        $workMinutes = Carbon::parse($this->check_in)
+        $workMinutes = $this->check_in
             ->diffInMinutes($this->check_out);
 
         return $workMinutes - $this->getBreakMinutes();
