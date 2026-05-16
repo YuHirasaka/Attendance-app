@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\AttendanceCorrectionRequest;
 use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
+use App\Models\AttendanceCorrection;
+use App\Models\AttendanceCorrectionBreak;
 
 class AttendanceController extends Controller
 {
@@ -118,8 +122,43 @@ class AttendanceController extends Controller
         ));
     }
 
-    public function edit(Attendance $attendance)
+    public function edit($id)
     {
+        $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
+
         return view('attendance.edit', compact('attendance'));
+    }
+
+    public function store(AttendanceCorrectionRequest $request)
+    {
+        $validated = $request->validated();
+        $attendance = Attendance::findOrFail($validated['attendance_id']);
+
+        DB::transaction(function () use ($validated, $attendance) {
+                $attendanceCorrection = AttendanceCorrection::create([
+                'attendance_id' => $attendance->id,
+                'requested_check_in' => $validated['requested_check_in'],
+                'requested_check_out' => $validated['requested_check_out'],
+                'reason' => $validated['reason'],
+                'status' => 'pending',
+            ]);
+
+            foreach ($validated['breaks'] as $break) {
+                if (
+                    empty($break['requested_break_start'] ?? null) &&
+                    empty($break['requested_break_end'] ?? null)
+                ) {
+                    continue;
+                }
+
+                AttendanceCorrectionBreak::create([
+                'attendance_correction_id' => $attendanceCorrection->id,
+                'requested_break_start' => $break['requested_break_start'],
+                'requested_break_end' => $break['requested_break_end'],
+                ]);
+            }
+        });
+
+        return redirect()->route('attendance.edit', $attendance->id)->with('flashSuccess', '修正を申請しました');
     }
 }
