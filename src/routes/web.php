@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function (){
     Route::post('/attendance/break-end', [AttendanceController::class, 'endBreak'])->name('attendance.break_end');
     Route::get('attendance/list', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');
+    Route::post('/stamp_correction_request', [AttendanceController::class, 'store'])->name('attendance_correction.store');
 });
 
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
