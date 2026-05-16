@@ -12,6 +12,7 @@ class AttendanceCorrectionBreak extends Model
     use HasFactory;
 
     protected $fillable = [
+        'attendance_correction_id',
         'requested_break_start',
         'requested_break_end'
     ];

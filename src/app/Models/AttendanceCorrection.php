@@ -13,6 +13,7 @@ class AttendanceCorrection extends Model
     use HasFactory;
 
     protected $fillable = [
+        'attendance_id',
         'requested_check_in',
         'requested_check_out',
         'reason',
