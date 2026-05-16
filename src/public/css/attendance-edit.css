@@ -1,0 +1,122 @@
+body {
+    background: #F0EFF2;
+    color: #737373;
+    font-weight: bold;
+}
+
+.attendance-detail {
+    width: 900px;
+    margin: 90px auto;
+}
+
+.attendance-detail__heading h1 {
+    border-left: 8px solid #000;
+    padding-left: 20px;
+    color: #000;
+}
+
+.attendance-detail__table {
+    width: 100%;
+    background: #fff;
+    letter-spacing: 0.1rem;
+    border-radius: 10px;
+    margin-top: 55px;
+}
+
+.attendance-detail__table tr {
+    border-bottom: 2px solid #e1e1e1;
+}
+.attendance-detail__table th {
+    text-align: left;
+    padding: 35px 65px;
+}
+
+.attendance-detail__table td {
+    color: #000;
+}
+
+.attendance-detail__name {
+    padding: 0 20px;
+}
+
+.attendance-detail__date {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 35px 0;
+    padding-right: 25px;
+}
+
+.attendance-detail__date p {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.attendance-detail__td {
+    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+}
+
+.attendance-detail__row {
+    width: 60%;
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attendance-detail__time-input,
+.attendance-detail__reason {
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    padding: 5px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+}
+
+.attendance-detail__time-input {
+    width: 103px;
+    align-items: center;
+}
+
+.attendance-detail__separator {
+    padding-top: 5px;
+    margin: 0 50px;
+}
+
+.attendance-detail__reason {
+    width: 60%;
+    height: 72px;
+    resize: none;
+    font-size: 14px;
+    margin: 15px 0 5px;
+}
+
+.attendance-detail__button {
+    text-align: right;
+}
+
+.attendance-detail__submit {
+    width: 130px;
+    height: 50px;
+    background: #000;
+    padding: 11px 41px;
+    font-size: 1.375rem;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    letter-spacing: 0.1rem;
+    margin-top: 36px;
+}
+
+.attendance-detail__errors {
+    color: red;
+    font-size: 0.8rem;
+    font-weight: normal;
+    white-space: nowrap;
+    width: max-content;
+}
