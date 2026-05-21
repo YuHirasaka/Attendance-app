@@ -5,6 +5,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\CorrectionRequestController;
 
 
 /*
@@ -26,6 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function (){
     Route::get('attendance/list', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');
     Route::post('/stamp_correction_request', [AttendanceController::class, 'store'])->name('attendance_correction.store');
+    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])->name('correction.index');
+    Route::get('/correction/{attendanceCorrection_id}', [CorrectionRequestController::class, 'show'])->name('correction.show');
 });
 
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
