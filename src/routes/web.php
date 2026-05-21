@@ -6,7 +6,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CorrectionRequestController;
-
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +30,14 @@ Route::middleware(['auth', 'verified'])->group(function (){
     Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])->name('correction.index');
     Route::get('/correction/{attendanceCorrection_id}', [CorrectionRequestController::class, 'show'])->name('correction.show');
 });
+
+Route::middleware(['auth:admin', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.index');
+});
+
+Route::get('admin/login', function () {
+    return view('admin.login');
+})->name('admin.login');
 
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
