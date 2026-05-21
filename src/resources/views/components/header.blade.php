@@ -9,17 +9,24 @@
             <li class="header__nav-item"><a href="/attendance">勤怠</a></li>
             <li class="header__nav-item"><a href="/attendance/list">勤怠一覧</a></li>
             <li class="header__nav-item"><a href="/stamp_correction_request/list">申請</a></li>
-            @elseif(Auth::check() && Auth::user()->role === 'admin')
-            <li class="header__nav-item"><a href="">勤怠一覧</a></li>
-            <li class="header__nav-item"><a href="">スタッフ一覧</a></li>
-            <li class="header__nav-item"><a href="">申請一覧</a></li>
-            @endif
             <li>
                 <form action="/logout" method="post">
                     @csrf
                     <button class="header__logout" type="submit">ログアウト</button>
                 </form>
             </li>
+            @elseif(Auth::check() && Auth::user()->role === 'admin')
+            <li class="header__nav-item"><a href="">勤怠一覧</a></li>
+            <li class="header__nav-item"><a href="">スタッフ一覧</a></li>
+            <li class="header__nav-item"><a href="">申請一覧</a></li>
+            <li>
+                <form action="/logout" method="post">
+                    @csrf
+                    <input type="hidden" name="guard" value="admin">
+                    <button class="header__logout" type="submit">ログアウト</button>
+                </form>
+            </li>
+            @endif
         </ul>
     </nav>
     @endif
