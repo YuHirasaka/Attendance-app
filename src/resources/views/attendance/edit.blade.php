@@ -31,9 +31,11 @@
                 <th>出勤・退勤</th>
                 <td class="attendance-detail__td">
                     <div class="attendance-detail__row">
-                        <input type="text" name="requested_check_in" value="{{ old('requested_check_in', $attendance->check_in->format('H:i')) }}" class="attendance-detail__time-input">
+                        <input type="text" name="requested_check_in" value="{{ old('requested_check_in', $attendance->check_in->format('H:i')) }}" class="attendance-detail__time-input"
+                        @if($isReadonly) readonly @endif>
                         <span class="attendance-detail__separator">〜</span>
-                        <input type="text" name="requested_check_out" value="{{ old('requested_check_out', $attendance->check_out->format('H:i')) }}" class="attendance-detail__time-input">
+                        <input type="text" name="requested_check_out" value="{{ old('requested_check_out', $attendance->check_out->format('H:i')) }}" class="attendance-detail__time-input"
+                        @if($isReadonly) readonly @endif>
                     </div>
                     <div class="attendance-detail__errors">
                         @if ($errors->has('requested_check_in'))
@@ -58,12 +60,14 @@
                         <input type="text"
                             name="breaks[{{ $break->id }}][requested_break_start]"
                             value="{{ old('breaks.' . $break->id . '.requested_break_start', $break->break_start->format('H:i')) }}"
-                            class="attendance-detail__time-input">
+                            class="attendance-detail__time-input"
+                            @if($isReadonly) readonly @endif>
                         <span class="attendance-detail__separator">〜</span>
                         <input type="text"
                             name="breaks[{{ $break->id }}][requested_break_end]"
                             value="{{ old('breaks.' . $break->id . '.requested_break_end', $break->break_end->format('H:i')) }}"
-                            class="attendance-detail__time-input">
+                            class="attendance-detail__time-input"
+                            @if($isReadonly) readonly @endif>
                     </div>
                     <div class="attendance-detail__errors">
                         @if ($errors->has('breaks.' .$break->id . '.requested_break_start'))
@@ -75,6 +79,7 @@
                 </td>
             </tr>
             @endforeach
+            @if(!$isReadonly)
             <tr>
                 <th>休憩{{ $attendance->breaks->count() + 1 }}</th>
                 <td class="attendance-detail__td">
@@ -97,6 +102,7 @@
                     </div>
                 </td>
             </tr>
+            @endif
             <tr>
                 <th>備考</th>
                 <td class="attendance-detail__td">
@@ -109,9 +115,15 @@
                 </td>
             </tr>
         </table>
+        @if(!$isReadonly)
         <div class="attendance-detail__button">
             <button class="attendance-detail__submit" type="submit">修正</button>
         </div>
+        @else
+        <p class="attendance-detail__notice">
+            ※承認待ちのため修正はできません。
+        </p>
+        @endif
     </form>
 </div>
 @endsection
