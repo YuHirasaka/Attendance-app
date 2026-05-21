@@ -22,6 +22,10 @@ class AttendanceCorrection extends Model
         'approved_at'
     ];
 
+    protected $casts = [
+        'approved_at' => 'dateTime'
+    ];
+
     public function Attendance()
     {
         return $this->belongsTo(Attendance::class);
@@ -35,5 +39,13 @@ class AttendanceCorrection extends Model
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return [
+            'pending' => '承認待ち',
+            'approved' => '承認済み'
+        ][$this->status];
     }
 }
