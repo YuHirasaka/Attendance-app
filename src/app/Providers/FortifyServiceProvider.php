@@ -18,6 +18,10 @@ use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 use Laravel\Fortify\Http\Requests\RegisterRequest as FortifyRegisterRequest;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\LoginResponse;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -41,10 +45,25 @@ class FortifyServiceProvider extends ServiceProvider
             };
         });
 
+        $this->app->singleton(LoginResponse::class, function () {
+            return new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    if ($request->guard === 'admin') {
+                        return redirect('/admin/attendance/list');
+                    }
+                    return redirect('/attendance');
+                }
+            };
+        });
+
         $this->app->singleton(LogoutResponse::class, function() {
             return new class implements LogoutResponse {
                 public function toResponse($request)
                 {
+                    if ($request->guard === 'admin') {
+                        return redirect('/admin/login');
+                    }
                     return redirect('/login');
                 }
             };
@@ -58,18 +77,45 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::createUsersUsing(CreateNewUser::class);
 
-            Fortify::registerView(function () {
-                return view('auth.register');
+        Fortify::registerView(function () {
+            return view('auth.register');
         });
 
-            Fortify::loginView(function () {
-                return view('auth.login');
+        Fortify::loginView(function () {
+            if (request()->is('admin/login')) {
+            return view('admin.login');
+            }
+            return view('auth.login');
         });
 
-            RateLimiter::for('login', function (Request $request) {
-                $email = (string) $request->email;
+        Fortify::authenticateUsing(function (Request $request) {
+            if ($request->guard === 'admin') {
+                $user = User::where('email', $request->email)
+                    ->where('role', 'admin')
+                    ->first();
 
-                return Limit::perMinute(10)->by($email . $request->ip());
+                if ($user && Hash::check($request->password, $user->password)) {
+                    Auth::guard('admin')->login($user);
+
+                    return $user;
+                }
+                return null;
+            }
+
+            $user = User::where('email', $request->email)
+                ->where('role', 'user')
+                ->first;
+
+            if ($user && Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+            return null;
+        });
+
+        RateLimiter::for('login', function (Request $request) {
+            $email = (string) $request->email;
+
+            return Limit::perMinute(10)->by($email . $request->ip());
         });
     }
 }
