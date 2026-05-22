@@ -17,6 +17,11 @@ class AttendanceCorrectionBreak extends Model
         'requested_break_end'
     ];
 
+    protected $casts = [
+        'requested_break_end' => 'datetime',
+        'requested_break_start' => 'datetime'
+    ];
+
     public function correction()
     {
         return $this->belongsTo(AttendanceCorrectionBreak::class, 'attendance_correction_id');

@@ -16,8 +16,8 @@ class AttendanceBreak extends Model
     ];
 
     protected $casts = [
-        'break_start' => 'dateTime',
-        'break_end' => 'dateTime'
+        'break_start' => 'datetime',
+        'break_end' => 'datetime'
     ];
 
     public function attendance()

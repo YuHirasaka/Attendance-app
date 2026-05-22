@@ -23,7 +23,9 @@ class AttendanceCorrection extends Model
     ];
 
     protected $casts = [
-        'approved_at' => 'dateTime'
+        'approved_at' => 'datetime',
+        'requested_check_in' => 'datetime',
+        'requested_check_out' => 'datetime',
     ];
 
     public function Attendance()
