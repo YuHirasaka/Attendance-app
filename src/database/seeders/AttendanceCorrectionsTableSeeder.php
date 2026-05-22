@@ -6,11 +6,10 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\AttendanceCorrection;
-use App\Models\AttendanceCorrectionBreak;
 
 
 
-class AttendanceCorrectionTableSeeder extends Seeder
+class AttendanceCorrectionsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -32,7 +31,7 @@ class AttendanceCorrectionTableSeeder extends Seeder
                     'attendance_id' => $attendance->id,
                     'requested_check_in' => '09:15',
                     'requested_check_out' => '18:15',
-                    'reason' => '遅延のため',
+                    'reason' => '電車遅延のため',
                     'status' => 'pending',
                 ]);
             }
