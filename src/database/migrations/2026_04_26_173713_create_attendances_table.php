@@ -17,7 +17,7 @@ class CreateAttendancesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('work_date');
-            $table->time('check_in');
+            $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
             $table->string('note')->nullable();
             $table->unique(['user_id', 'work_date']);
