@@ -19,6 +19,7 @@ class Attendance extends Model
     const STATUS_NOT_WORKING = '勤務外';
 
     protected $fillable = [
+        'user_id',
         'work_date',
         'check_in',
         'check_out',
