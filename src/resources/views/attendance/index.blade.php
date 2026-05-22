@@ -50,7 +50,9 @@
                 <td>{{ $attendance?->work_time }}</td>
                 <td>
                     @if($attendance)
-                    <a href="/attendance/detail/{{$attendance->id}}" class="attendance-list__table-detail">詳細</a>
+                        <a href="/attendance/detail/{{$attendance->id}}" class="attendance-list__table-detail">詳細</a>
+                    @else
+                        <a href="/attendance/create?date={{ $day->format('Y-m-d') }}" class="attendance-list__table-detail">詳細</a>
                     @endif
                 </td>
             </tr>
