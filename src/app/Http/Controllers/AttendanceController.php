@@ -122,11 +122,38 @@ class AttendanceController extends Controller
         ));
     }
 
+    public function create(Request $request)
+    {
+        $user = Auth::user();
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'work_date' => $request->date,
+        ]);
+
+        return redirect('/attendance/detail/' . $attendance->id);
+    }
+
     public function edit($id)
     {
         $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
 
-        return view('attendance.edit', compact('attendance'));
+        $correction = AttendanceCorrection::with('breaks')
+            ->where('attendance_id', $attendance->id)
+            ->latest()
+            ->first();
+
+        if($correction) {
+            return view('attendance.edit', [
+                'attendance' => $attendance,
+                'correction' => $correction,
+                'isReadonly' => true,
+            ]);
+        }
+
+        return view('attendance.edit', [
+            'attendance' => $attendance,
+            'isReadonly' => false,
+        ]);
     }
 
     public function store(AttendanceCorrectionRequest $request)
@@ -143,8 +170,9 @@ class AttendanceController extends Controller
                 'status' => 'pending',
             ]);
 
-            foreach ($validated['breaks'] as $break) {
+            foreach ($validated['breaks'] as $breakId => $break) {
                 if (
+                    $breakId === 'new' &&
                     empty($break['requested_break_start'] ?? null) &&
                     empty($break['requested_break_end'] ?? null)
                 ) {
