@@ -28,8 +28,13 @@ class AttendancesTableSeeder extends Seeder
             foreach ($months as $month) {
                 $start = $month->copy()->startOfMonth();
                 $end = $month->copy()->endOfMonth();
+                $today = Carbon::today();
 
-                for ($date = $start; $date <= $end; $date->addDay()) {
+                for ($date = $start->copy(); $date <= $end; $date->addDay()) {
+                    if ($date > $today) {
+                        break;
+                    }
+
                     if ($date->isWeekend()) {
                         continue;
                     }
