@@ -32,7 +32,7 @@ class CorrectionRequestController extends Controller
 
     public function show($attendanceCorrection_id)
     {
-        $correction = AttendanceCorrection::with('attendance.breaks')->findOrFail($attendanceCorrection_id);
+        $correction = AttendanceCorrection::with('attendance.breaks', 'breaks')->findOrFail($attendanceCorrection_id);
 
         $attendance = $correction->attendance;
 
