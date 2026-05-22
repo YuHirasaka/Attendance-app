@@ -104,6 +104,11 @@ body {
     padding-right: 30px;
 }
 
+.attendance-list__table th:first-of-type:not(.attendance-list__table-head),
+.attendance-list__table td:first-of-type:not(.attendance-list__table-date) {
+    text-align: left;
+}
+
 .attendance-list__table th:last-of-type,
 .attendance-list__table td:last-of-type {
     width: 15%;

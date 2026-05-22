@@ -45,7 +45,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin: 35px 0;
-    padding-right: 25px;
+    padding-right: 20px;
 }
 
 .attendance-detail__date p {
@@ -65,6 +65,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 20px;
 }
 
 .attendance-detail__time-input,
@@ -92,7 +93,7 @@ body {
     height: 72px;
     resize: none;
     font-size: 14px;
-    margin: 15px 0 5px;
+    margin: 15px 20px;
 }
 
 .attendance-detail__button {
@@ -126,4 +127,11 @@ body {
     font-weight: normal;
     text-align: right;
     margin-top: 25px;
+}
+
+.attendance-detail__reason-text {
+    width: 60%;
+    height: 72px;
+    margin: 15px 0 5px;
+    padding-left: 20px;
 }
