@@ -15,10 +15,12 @@
     <div class="attendance-detail__heading">
         <h1>勤怠詳細</h1>
     </div>
-    <form action="" method="post">
+    <form action="{{ route('admin.attendance.save') }}" method="post">
         @csrf
+        <input type="hidden" name="user_id" value="{{ old('user_id', $user->id) }}">
+        <input type="hidden" name="work_date" value="{{ old('work_date', $workDate->format('Y-m-d')) }}">
         @if($attendance)
-        <input type="hidden" name="attendance_id" value="{{ $attendance->id }}">
+        <input type="hidden" name="attendance_id" value="{{ old('attendance_id', $attendance->id) }}">
         @endif
         <table class="attendance-detail__table">
             <tr>
@@ -41,16 +43,16 @@
                             <span class="attendance-detail__separator">〜</span>
                             <p>{{ optional($correction)->requested_check_out?->format('H:i') }}</p>
                         @else
-                            <input type="text" name="requested_check_in" value="{{ old('requested_check_in', optional($attendance)->check_in?->format('H:i')) }}" class="attendance-detail__time-input">
+                            <input type="text" name="check_in" value="{{ old('check_in', optional($attendance)->check_in?->format('H:i')) }}" class="attendance-detail__time-input">
                             <span class="attendance-detail__separator">〜</span>
-                            <input type="text" name="requested_check_out" value="{{ old('requested_check_out', optional($attendance)->check_out?->format('H:i')) }}" class="attendance-detail__time-input">
+                            <input type="text" name="check_out" value="{{ old('check_out', optional($attendance)->check_out?->format('H:i')) }}" class="attendance-detail__time-input">
                         @endif
                     </div>
                     <div class="attendance-detail__errors">
-                        @if ($errors->has('requested_check_in'))
-                            {{ $errors->first('requested_check_in') }}
-                        @elseif ($errors->has('requested_check_out'))
-                            {{ $errors->first('requested_check_out') }}
+                        @if ($errors->has('check_in'))
+                            {{ $errors->first('check_in') }}
+                        @elseif ($errors->has('check_out'))
+                            {{ $errors->first('check_out') }}
                         @endif
                     </div>
                 </td>
@@ -87,20 +89,20 @@
                     <td class="attendance-detail__td">
                         <div class="attendance-detail__row">
                             <input type="text"
-                                name="breaks[{{ $break->id }}][requested_break_start]"
-                                value="{{ old('breaks.' . $break->id . '.requested_break_start', $break->break_start?->format('H:i')) }}"
+                                name="breaks[{{ $break->id }}][break_start]"
+                                value="{{ old('breaks.' . $break->id . '.break_start', $break->break_start?->format('H:i')) }}"
                                 class="attendance-detail__time-input">
                             <span class="attendance-detail__separator">〜</span>
                             <input type="text"
-                                name="breaks[{{ $break->id }}][requested_break_end]"
-                                value="{{ old('breaks.' . $break->id . '.requested_break_end', $break->break_end?->format('H:i')) }}"
+                                name="breaks[{{ $break->id }}][break_end]"
+                                value="{{ old('breaks.' . $break->id . '.break_end', $break->break_end?->format('H:i')) }}"
                                 class="attendance-detail__time-input">
                         </div>
                         <div class="attendance-detail__errors">
-                            @if ($errors->has('breaks.' .$break->id . '.requested_break_start'))
-                                {{ $errors->first('breaks.' .$break->id . '.requested_break_start') }}
-                            @elseif ($errors->has('breaks.' .$break->id . '.requested_break_end'))
-                                {{ $errors->first('breaks.' .$break->id . '.requested_break_end') }}
+                            @if ($errors->has('breaks.' .$break->id . '.break_start'))
+                                {{ $errors->first('breaks.' .$break->id . '.break_start') }}
+                            @elseif ($errors->has('breaks.' .$break->id . '.break_end'))
+                                {{ $errors->first('breaks.' .$break->id . '.break_end') }}
                             @endif
                         </div>
                     </td>
@@ -113,19 +115,19 @@
                 <td class="attendance-detail__td">
                     <div class="attendance-detail__row">
                         <input type="text"
-                            name="breaks[new][requested_break_start]"
-                            value="{{ old('breaks.new.requested_break_start') }}" class="attendance-detail__time-input">
+                            name="breaks[new][break_start]"
+                            value="{{ old('breaks.new.break_start') }}" class="attendance-detail__time-input">
                         <span class="attendance-detail__separator">〜</span>
                         <input type="text"
-                            name="breaks[new][requested_break_end]"
-                            value="{{ old('breaks.new.requested_break_end') }}"
+                            name="breaks[new][break_end]"
+                            value="{{ old('breaks.new.break_end') }}"
                             class="attendance-detail__time-input">
                     </div>
                     <div class="attendance-detail__errors">
-                        @if ($errors->has('breaks.new.requested_break_start'))
-                            {{ $errors->first('breaks.new.requested_break_start') }}
-                        @elseif ($errors->has('breaks.new.requested_break_end'))
-                            {{ $errors->first('breaks.new.requested_break_end')}}
+                        @if ($errors->has('breaks.new.break_start'))
+                            {{ $errors->first('breaks.new.break_start') }}
+                        @elseif ($errors->has('breaks.new.break_end'))
+                            {{ $errors->first('breaks.new.break_end')}}
                         @endif
                     </div>
                 </td>
@@ -134,12 +136,13 @@
             <tr>
                 <th>備考</th>
                 <td class="attendance-detail__td">
+                    {{-- 通常編集時は勤怠の備考(note)、承認待ち時は申請理由(reason)を表示 --}}
                     @if($isReadonly)
                     <p class="attendance-detail__reason-text">{{ optional($correction)->reason }}</p>
                     @else
-                    <textarea name="reason" class="attendance-detail__reason"></textarea>
+                    <textarea name="note" class="attendance-detail__reason">{{ old('note', optional($attendance)->note) }}</textarea>
                     <div class="attendance-detail__errors">
-                        @error('reason')
+                        @error('note')
                         {{ $message }}
                         @enderror
                     </div>
