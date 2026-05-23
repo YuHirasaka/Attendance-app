@@ -33,7 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function (){
 });
 
 Route::middleware(['auth:admin', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.index');
+    Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
+    Route::get('/attendance/create', [AdminAttendanceController::class, 'create'])->name('admin.attendance.create');
+    Route::get('/attendance/{id}', [AdminAttendanceController::class, 'edit'])->name('admin.attendance.edit');
 });
 
 Route::get('admin/login', function () {
