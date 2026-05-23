@@ -16,9 +16,9 @@
                 </form>
             </li>
             @elseif(Auth::check() && Auth::user()->role === 'admin')
-            <li class="header__nav-item"><a href="">勤怠一覧</a></li>
-            <li class="header__nav-item"><a href="">スタッフ一覧</a></li>
-            <li class="header__nav-item"><a href="">申請一覧</a></li>
+            <li class="header__nav-item"><a href="/admin/attendance/list">勤怠一覧</a></li>
+            <li class="header__nav-item"><a href="/admin/staff/list">スタッフ一覧</a></li>
+            <li class="header__nav-item"><a href="stamp_correction_request/list">申請一覧</a></li>
             <li>
                 <form action="/logout" method="post">
                     @csrf
