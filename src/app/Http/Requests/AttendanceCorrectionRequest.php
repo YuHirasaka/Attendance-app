@@ -59,13 +59,13 @@ class AttendanceCorrectionRequest extends FormRequest
 
             'breaks.*.requested_break_start.required_with' => '休憩開始時間を入力してください',
             'breaks.*.requested_break_start.date_format' => '休憩開始時間を正しい形式で入力してください',
-            'breaks.*.requested_break_start.after' => '休憩時間が勤務時間外です',
-            'breaks.*.requested_break_start.before' => '休憩時間が勤務時間外です',
+            'breaks.*.requested_break_start.after' => '休憩時間が不適切な値です',
+            'breaks.*.requested_break_start.before' => '休憩時間が不適切な値です',
 
             'breaks.*.requested_break_end.required_with' => '休憩終了時間を入力してください',
             'breaks.*.requested_break_end.date_format' => '休憩終了時間を正しい形式で入力してください',
             'breaks.*.requested_break_end.after' => '休憩時間が勤務時間外です',
-            'breaks.*.requested_break_end.before' => '休憩時間が勤務時間外です',
+            'breaks.*.requested_break_end.before' => '休憩時間もしくは退勤時間が不適切な値です',
 
             'reason.required' => '備考を記入してください',
             'reason.string' => '備考を文字列で入力してください',
