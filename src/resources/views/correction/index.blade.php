@@ -3,15 +3,14 @@
 @section('title', '申請一覧')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/list-page.css') }}">
 <link rel="stylesheet" href="{{ asset('css/correction-index.css') }}">
 @endsection
 
 @section('content')
 @include('components.header')
-<div class="correction-list">
-    <div class="correction-list__heading">
-        <h1>申請一覧</h1>
-    </div>
+<div class="list-page">
+    <x-page-heading>申請一覧</x-page-heading>
     <div class="correction-list__nav">
         <ul class="correction-list__nav-link">
             <li>
@@ -43,8 +42,8 @@
                 <td>{{ $correction->attendance->work_date->format('Y/m/d') }}</td>
                 <td class="correction-list__table-reason">{{ $correction->reason }}</td>
                 <td>{{ $correction->created_at->format('Y/m/d')}}</td>
-                <td class="correction-list__table-detail">
-                    <a href="{{ route('correction.show', $correction->id) }}">詳細</a>
+                <td>
+                    <x-detail-link :href="route('correction.show', $correction->id)" />
                 </td>
             </tr>
             @endforeach

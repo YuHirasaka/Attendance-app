@@ -3,15 +3,14 @@
 @section('title', '勤怠一覧')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/list-page.css') }}">
 <link rel="stylesheet" href="{{ asset('css/attendance-index.css') }}">
 @endsection
 
 @section('content')
 @include('components.header')
-<div class="attendance-list">
-    <div class="attendance-list__heading">
-        <h1>{{ $currentDay->format('Y年n月j日') }}の勤怠</h1>
-    </div>
+<div class="list-page">
+    <x-page-heading>{{ $currentDay->format('Y年n月j日') }}の勤怠</x-page-heading>
     <div class="attendance-list__month-nav">
         <a href="{{ route('admin.attendance.index', ['day' => $prevDay]) }}" class="attendance-list__month-link">
             前日
@@ -48,9 +47,9 @@
                 <td>{{ $attendance?->work_time }}</td>
                 <td>
                     @if($attendance)
-                        <a href="/admin/attendance/{{$attendance->id}}" class="attendance-list__table-detail">詳細</a>
+                        <x-detail-link :href="route('admin.attendance.edit', $attendance->id)" />
                     @else
-                        <a href="/admin/attendance/create?user_id={{ $user->id }}&day={{ $currentDay->format('Y-m-d') }}" class="attendance-list__table-detail">詳細</a>
+                        <x-detail-link :href="route('admin.attendance.create', ['user_id' => $user->id, 'day' => $currentDay->format('Y-m-d')])" />
                     @endif
                 </td>
             </tr>
