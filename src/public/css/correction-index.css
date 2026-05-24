@@ -1,23 +1,6 @@
-body {
-    background: #F0EFF2;
-    color: #737373;
-    font-weight: bold;
-}
-
 ul,
 li {
     list-style: none;
-}
-
-.correction-list {
-    width: 900px;
-    margin: 90px auto;
-}
-
-.correction-list__heading h1 {
-    border-left: 8px solid #000;
-    padding-left: 20px;
-    color: #000;
 }
 
 .correction-list__nav {
@@ -26,7 +9,7 @@ li {
     margin-top: 65px;
 }
 
-.correction-list__nav-link{
+.correction-list__nav-link {
     color: #000;
     display: flex;
     justify-content: flex-start;
@@ -81,9 +64,4 @@ li {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-}
-
-.correction-list__table-detail a{
-    text-decoration: none;
-    color: #000;
 }
