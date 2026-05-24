@@ -7,6 +7,9 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CorrectionRequestController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\StaffAttendanceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +40,8 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->group(function () {
     Route::get('/attendance/create', [AdminAttendanceController::class, 'create'])->name('admin.attendance.create');
     Route::get('/attendance/{id}', [AdminAttendanceController::class, 'edit'])->name('admin.attendance.edit');
     Route::post('/attendance/save', [AdminAttendanceController::class, 'save'])->name('admin.attendance.save');
+    Route::get('/staff/list' , [StaffController::class, 'index'])->name('admin.staff.index');
+    Route::get('/attendance/staff/{id}', [StaffAttendanceController::class, 'index'])->name('admin.staff.attendance.index');
 });
 
 Route::get('admin/login', function () {
