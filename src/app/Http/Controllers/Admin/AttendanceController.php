@@ -59,7 +59,6 @@ class AttendanceController extends Controller
             'user' => $user,
             'day' => $day,
             'attendance' => $attendance,
-            'correction' => null,
             'isReadonly' => false,
         ]);
     }
