@@ -10,36 +10,36 @@ class CorrectionRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $page = $request->page;
+        $page = $request->query('page', 'pending');
         $user = Auth::user();
 
-        if ($page === 'pending') {
-            $attendanceCorrections = AttendanceCorrection::where('status', 'pending')
-            ->whereHas('attendance', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->get();
-        } else {
-            $attendanceCorrections = AttendanceCorrection::where('status','approved')
-            ->whereHas('attendance', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->get();
-        }
+        $status = $page === 'approved' ? 'approved' : 'pending';
 
-        return view('correction.index', compact('attendanceCorrections'));
+        $attendanceCorrections = AttendanceCorrection::with('attendance.user')
+            ->where('status', $status)
+            ->whereHas('attendance', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+
+        return view('correction.index', compact('attendanceCorrections', 'page'));
     }
 
     public function show($attendanceCorrection_id)
     {
-        $correction = AttendanceCorrection::with('attendance.breaks', 'breaks')->findOrFail($attendanceCorrection_id);
+        $correction = AttendanceCorrection::with('attendance.user', 'breaks')
+            ->where('id', $attendanceCorrection_id)
+            ->whereHas('attendance', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->firstOrFail();
 
         $attendance = $correction->attendance;
 
-        return view('attendance.edit', [
-            'attendance' => $attendance,
+        return view('correction.show', [
             'correction' => $correction,
-            'isReadonly' => true,
+            'user' => $correction->attendance->user,
+            'workDate' => $correction->attendance->work_date,
         ]);
     }
 }

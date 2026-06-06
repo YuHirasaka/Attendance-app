@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AttendanceCorrectionRequest;
-use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use App\Models\AttendanceCorrection;
@@ -98,8 +97,8 @@ class AttendanceController extends Controller
     public function index()
     {
         $currentMonth = request('month')
-        ? Carbon::parse(request('month'))
-        : Carbon::now();
+            ? Carbon::parse(request('month'))
+            : Carbon::now();
 
         $prevMonth = $currentMonth->copy()
             ->subMonth()
@@ -118,7 +117,8 @@ class AttendanceController extends Controller
             $days->push($date->copy());
         }
 
-        $attendances = Attendance::where('user_id', auth()->id())
+        $attendances = Attendance::with('pendingCorrection')
+            ->where('user_id', auth()->id())
             ->whereYear('work_date', $currentMonth->year)
             ->whereMonth('work_date', $currentMonth->month)
             ->get()
@@ -139,54 +139,100 @@ class AttendanceController extends Controller
     public function create(Request $request)
     {
         $user = Auth::user();
-        $attendance = Attendance::create([
-            'user_id' => $user->id,
-            'work_date' => $request->date,
-        ]);
+        $date = Carbon::parse($request->date);
 
-        return redirect('/attendance/detail/' . $attendance->id);
+        return view('attendance.edit', [
+            'attendance' => null,
+            'correction' => null,
+            'workDate' => $date,
+            'user' => $user,
+            'breaks' => collect(),
+            'checkIn' => null,
+            'checkOut' => null,
+        ]);
     }
 
     public function edit($id)
     {
-        $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
+        $attendance = Attendance::with(['user', 'breaks'])
+            ->where('user_id', auth()->id())
+            ->where('id', $id)
+            ->firstOrFail();
 
         $correction = AttendanceCorrection::with('breaks')
             ->where('attendance_id', $attendance->id)
-            ->latest()
+            ->where('status', 'pending')
             ->first();
 
-        if($correction) {
-            return view('attendance.edit', [
-                'attendance' => $attendance,
-                'correction' => $correction,
-                'isReadonly' => true,
-            ]);
+        if ($correction) {
+            return redirect()->route('correction.show', $correction->id);
         }
 
-        return view('attendance.edit', [
-            'attendance' => $attendance,
-            'isReadonly' => false,
-        ]);
+        $user = $attendance->user;
+        $workDate = $attendance->work_date;
+        $breaks = $attendance->breaks;
+        $checkIn = $attendance->check_in;
+        $checkOut = $attendance->check_out;
+
+        return view('attendance.edit', compact(
+            'attendance',
+            'user',
+            'workDate',
+            'breaks',
+            'correction',
+            'checkIn',
+            'checkOut'
+        ));
     }
 
     public function store(AttendanceCorrectionRequest $request)
     {
         $validated = $request->validated();
-        $attendance = Attendance::findOrFail($validated['attendance_id']);
+
+        if (!empty($validated['attendance_id'])) {
+            $attendance = Attendance::where('user_id', Auth::id())
+                ->findOrFail($validated['attendance_id']);
+        } else {
+            $attendance = Attendance::firstOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                    'work_date' => $validated['work_date'],
+                ],
+                [
+                    'check_in' => null,
+                    'check_out' => null,
+                    'note' => null,
+                ]
+            );
+        }
+
+        $pendingCorrection = AttendanceCorrection::where('attendance_id', $attendance->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($pendingCorrection) {
+            return redirect()
+                ->route('correction.show', $pendingCorrection->id)
+                ->withErrors(['reason' => '承認待ちの申請があるため、新たに申請できません。']);
+        }
 
         DB::transaction(function () use ($validated, $attendance) {
-                $attendanceCorrection = AttendanceCorrection::create([
-                'attendance_id' => $attendance->id,
-                'requested_check_in' => $validated['requested_check_in'],
-                'requested_check_out' => $validated['requested_check_out'],
-                'reason' => $validated['reason'],
-                'status' => 'pending',
-            ]);
+            $attendanceCorrection = AttendanceCorrection::updateOrCreate(
+                ['attendance_id' => $attendance->id],
+                [
+                    'requested_check_in' => $validated['requested_check_in'],
+                    'requested_check_out' => $validated['requested_check_out'],
+                    'reason' => $validated['reason'],
+                    'status' => 'pending',
+                    'approved_by' => null,
+                    'approved_at' => null,
+                ]
+            );
 
-            foreach ($validated['breaks'] as $breakId => $break) {
+            $attendanceCorrection->breaks()->delete();
+
+            foreach ($validated['breaks'] ?? [] as $break) {
                 if (
-                    $breakId === 'new' &&
                     empty($break['requested_break_start'] ?? null) &&
                     empty($break['requested_break_end'] ?? null)
                 ) {
@@ -194,9 +240,9 @@ class AttendanceController extends Controller
                 }
 
                 AttendanceCorrectionBreak::create([
-                'attendance_correction_id' => $attendanceCorrection->id,
-                'requested_break_start' => $break['requested_break_start'],
-                'requested_break_end' => $break['requested_break_end'],
+                    'attendance_correction_id' => $attendanceCorrection->id,
+                    'requested_break_start' => $break['requested_break_start'],
+                    'requested_break_end' => $break['requested_break_end'],
                 ]);
             }
         });

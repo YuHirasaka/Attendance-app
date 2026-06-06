@@ -24,7 +24,8 @@ class AttendanceCorrectionRequest extends FormRequest
     public function rules()
     {
         return [
-            'attendance_id' => ['required', 'exists:attendances,id'],
+            'attendance_id' => ['nullable', 'exists:attendances,id'],
+            'work_date' => ['required_without:attendance_id', 'nullable', 'date'],
             'requested_check_in' => 'required|date_format:H:i',
             'requested_check_out' => 'required|date_format:H:i|after:requested_check_in',
             'breaks' => 'nullable|array',

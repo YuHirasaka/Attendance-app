@@ -49,7 +49,9 @@
                 <td>{{ $attendance?->break_time }}</td>
                 <td>{{ $attendance?->work_time }}</td>
                 <td>
-                    @if($attendance)
+                    @if($attendance?->pendingCorrection)
+                        <x-detail-link :href="route('correction.show', $attendance->pendingCorrection->id)" />
+                    @elseif($attendance)
                         <x-detail-link :href="route('attendance.edit', $attendance->id)" />
                     @else
                         <x-detail-link :href="route('attendance.create', ['date' => $day->format('Y-m-d')])" />
