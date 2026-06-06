@@ -16,22 +16,31 @@ class AttendanceController extends Controller
 {
     public function show()
     {
-        $user = Auth::User();
+        $user = Auth::user();
         $attendance = $user->attendances()
             ->whereDate('work_date', today())
             ->first();
         $status = $attendance ? $attendance->status() : Attendance::STATUS_NOT_WORKING;
 
-        return view('attendance.stamp', compact('user','status','attendance'));
+        return view('attendance.stamp', compact('user', 'status', 'attendance'));
     }
 
     public function checkIn(Request $request)
     {
         $user = Auth::user();
 
-        $user->attendances()->create([
-            'work_date' => today(),
-            'check_in' => now(),
+        $attendance = $user->attendances()->firstOrCreate(
+            ['work_date' => today()],
+            ['check_in' => null, 'check_out' => null]
+        );
+
+        if ($attendance->check_in) {
+            return redirect('/attendance')
+                ->withErrors(['check_in' => '本日は既に出勤済です']);
+        }
+
+        $attendance->update(
+            ['check_in' => now(),
         ]);
 
         return redirect('/attendance')->with('flashSuccess', '出勤しました！');
@@ -42,6 +51,11 @@ class AttendanceController extends Controller
         $attendance = Auth::user()->attendances()
             ->whereDate('work_date', today())
             ->firstOrFail();
+
+        if ($attendance->check_out) {
+            return redirect('/attendance')
+                ->withErrors(['check_out' => '本日は既に退勤済です']);
+        }
 
         $attendance->update([
             'check_out' => now(),
@@ -56,7 +70,7 @@ class AttendanceController extends Controller
             ->whereDate('work_date', today())
             ->firstOrFail();
 
-        $attendance->Breaks()->create([
+        $attendance->breaks()->create([
             'break_start' => now(),
         ]);
 
@@ -69,7 +83,7 @@ class AttendanceController extends Controller
             ->whereDate('work_date', today())
             ->firstOrFail();
 
-        $break = $attendance->Breaks()
+        $break = $attendance->breaks()
             ->whereNull('break_end')
             ->latest()
             ->firstOrFail();

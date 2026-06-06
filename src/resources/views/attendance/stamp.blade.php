@@ -12,6 +12,13 @@
 <div class="attendance">
     <section class="attendance-card">
         <p class="attendance-card__status">{{ $status }}</p>
+        @if ($errors->any())
+            <div class="attendance-card__errors">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
         <p id="date" class="attendance-card__date"></p>
         <h1 id="nowTime" class="attendance-card__time"></h1>
         @if ($status === \App\Models\Attendance::STATUS_DONE)
