@@ -46,6 +46,11 @@ class Attendance extends Model
         return $this->hasOne(AttendanceCorrection::class);
     }
 
+    public function pendingCorrection()
+    {
+        return $this->hasOne(AttendanceCorrection::class)->where('status', 'pending');
+    }
+
     public function status()
     {
         if($this->check_out){
@@ -85,8 +90,12 @@ class Attendance extends Model
         return $workMinutes - $this->getBreakMinutes();
     }
 
-    public function getBreakTimeAttribute(): string
+    public function getBreakTimeAttribute(): ?string
     {
+        if (!$this->check_in || !$this->check_out) {
+            return null;
+        }
+
         $minutes = $this->getBreakMinutes();
 
         $hours = floor($minutes / 60);
@@ -96,8 +105,12 @@ class Attendance extends Model
         return sprintf('%d:%02d', $hours, $minutes);
     }
 
-    public function getWorkTimeAttribute(): string
+    public function getWorkTimeAttribute(): ?string
     {
+        if (!$this->check_in || !$this->check_out) {
+            return null;
+        }
+
         $minutes = $this->getWorkingMinutes();
 
         $hours = floor($minutes / 60);
