@@ -66,8 +66,13 @@
             @endforeach
         </tbody>
     </table>
-    <div class="staff-attendance__button">
-        <button class="staff-attendance__submit" type="submit">CSV出力</button>
-    </div>
+    <form action="{{ route('admin.staff.attendance.export') }}" method="post">
+        @csrf
+        <input type="hidden" name="user_id" value="{{ $user->id }}">
+        <input type="hidden" name="month" value="{{ $currentMonth->format('Y-m') }}">
+        <div class="staff-attendance__button">
+            <button class="staff-attendance__submit" type="submit">CSV出力</button>
+        </div>
+    </form>
 </div>
 @endsection
