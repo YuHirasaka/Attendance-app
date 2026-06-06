@@ -28,7 +28,7 @@ class AttendanceCorrection extends Model
         'requested_check_out' => 'datetime',
     ];
 
-    public function Attendance()
+    public function attendance()
     {
         return $this->belongsTo(Attendance::class);
     }

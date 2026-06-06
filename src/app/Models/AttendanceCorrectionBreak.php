@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\AttendanceCorrectionBreak;
-
 
 class AttendanceCorrectionBreak extends Model
 {
@@ -24,6 +22,6 @@ class AttendanceCorrectionBreak extends Model
 
     public function correction()
     {
-        return $this->belongsTo(AttendanceCorrectionBreak::class, 'attendance_correction_id');
+        return $this->belongsTo(AttendanceCorrection::class, 'attendance_correction_id');
     }
 }
