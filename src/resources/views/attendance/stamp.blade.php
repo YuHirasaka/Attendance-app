@@ -19,8 +19,8 @@
                 @endforeach
             </div>
         @endif
-        <p id="date" class="attendance-card__date"></p>
-        <h1 id="nowTime" class="attendance-card__time"></h1>
+        <p id="date" class="attendance-card__date">{{ now()->isoFormat('YYYY年M月D日(ddd)') }}</p>
+        <h1 id="nowTime" class="attendance-card__time">{{ now()->format('H:i') }}</h1>
         @if ($status === \App\Models\Attendance::STATUS_DONE)
             <h1 class="attendance-card__text">お疲れ様でした。</h1>
         @elseif ($status === \App\Models\Attendance::STATUS_BREAK)
