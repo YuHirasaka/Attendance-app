@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Laravel\Fortify\Http\Requests\RegisterRequest as FortifyRegisterRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FortifyRegisterRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
