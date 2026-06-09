@@ -25,8 +25,17 @@ class AttendanceCorrectionsTableSeeder extends Seeder
             ->take(9)
             ->get();
 
-            foreach ($attendances as $attendance) {
+            foreach ($attendances->take(3) as $attendance) {
+                AttendanceCorrection::create([
+                    'attendance_id' => $attendance->id,
+                    'requested_check_in' => '09:15',
+                    'requested_check_out' => '18:15',
+                    'reason' => '電車遅延のため',
+                    'status' => 'approved',
+                ]);
+            }
 
+            foreach ($attendances->skip(6) as $attendance) {
                 AttendanceCorrection::create([
                     'attendance_id' => $attendance->id,
                     'requested_check_in' => '09:15',
