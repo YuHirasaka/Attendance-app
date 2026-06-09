@@ -40,6 +40,11 @@ make init
 以下のURLから会員登録し、Inbox を作成してください。
 https://mailtrap.io/
 
+.env に以下を設定してください。
+```
+MAIL_USERNAME=your_mailtrap_username
+MAIL_PASSWORD=your_mailtrap_password
+```
 ---
 ## 使用技術
 
