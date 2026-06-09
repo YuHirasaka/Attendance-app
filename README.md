@@ -21,8 +21,7 @@
 git clone git@github.com:YuHirasaka/Attendance-app.git
 cd Attendance-app
 ```
-2. Dockerを起動する
-3. プロジェクト直下で、以下のコマンドを実行する
+2. プロジェクト直下で、以下のコマンドを実行する
 ```bash
 make init
 ```
@@ -63,6 +62,25 @@ MAIL_PASSWORD=your_mailtrap_password
 - 管理者ログイン：http://localhost/admin/login
 - phpMyAdmin：http://localhost:8080/
 - Mailtrap（メール確認用サンドボックス）：https://mailtrap.io/inboxes
+
+## テストアカウント
+
+
+### 管理者ユーザー
+| 名前 | メールアドレス | パスワード |
+| --- | --- | --- |
+| 勤怠管理者 | admin@gmail.com | password |
+
+### 一般ユーザー
+
+| 名前 | メールアドレス | パスワード |
+| --- | --- | --- |
+| 西 怜奈 | reina.n@coachtech.com | password |
+| 山田 太郎 | taro.y@coachtech.com | password |
+| 増田 一世 | issei.m@coachtech.com | password |
+| 山本 敬吉 | keikichi.y@coachtech.com | password |
+| 秋田 朋美 | tomomi.a@coachtech.com | password |
+| 中西 教夫 | norio.n@coachtech.com | password |
 
 ## テーブル仕様
 ### usersテーブル
@@ -129,24 +147,7 @@ UNIQUE(user_id, work_date)
 ## ER図
 ![ER図](er.png)
 
-## テストアカウント
 
-
-### 管理者ユーザー
-| 名前 | メールアドレス | パスワード |
-| --- | --- | --- |
-| 勤怠管理者 | admin@gmail.com | password |
-
-### 一般ユーザー
-
-| 名前 | メールアドレス | パスワード |
-| --- | --- | --- |
-| 西 怜奈 | reina.n@coachtech.com | password |
-| 山田 太郎 | taro.y@coachtech.com | password |
-| 増田 一世 | issei.m@coachtech.com | password |
-| 山本 敬吉 | keikichi.y@coachtech.com | password |
-| 秋田 朋美 | tomomi.a@coachtech.com | password |
-| 中西 教夫 | norio.n@coachtech.com | password |
 
 
 ## php unitテスト
