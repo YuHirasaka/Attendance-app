@@ -19,14 +19,28 @@
 1. リポジトリをクローン
 ```bash
 git clone git@github.com:YuHirasaka/Attendance-app.git
+cd Attendance-app
 ```
 2. Dockerを起動する
 3. プロジェクト直下で、以下のコマンドを実行する
 ```bash
 make init
 ```
----
+※ `make init` を実行すると、以下の処理が自動で実行されます。
 
+- Dockerコンテナの起動
+- Composerパッケージのインストール
+- `.env` ファイルの作成
+- アプリケーションキーの生成
+- データベースのマイグレーション
+- シーディングによる初期データの投入
+---
+## メール認証
+メール認証機能の確認には Mailtrap を使用しています。
+以下のURLから会員登録し、Inbox を作成してください。
+https://mailtrap.io/
+
+---
 ## 使用技術
 
 - docker
@@ -40,7 +54,8 @@ make init
 
 ## URL
 
-- 開発環境：http://localhost/
+- 開発環境：http://localhost/login
+- 管理者ログイン：http://localhost/admin/login
 - phpMyAdmin：http://localhost:8080/
 - Mailtrap（メール確認用サンドボックス）：https://mailtrap.io/inboxes
 
@@ -65,18 +80,19 @@ make init
 | id | bigint | ◯ |  | ◯ |  |
 | user_id | bigint |  |  | ◯ | users(id) |
 | work_date | date |  |  | ◯ |  |
-| check_in | time |  |  | ◯ |  |
+| check_in | time |  |  |  |  |
 | check_out | time |  |  |  |  |
 | note | varchar(255) |  |  |  |  |
 | created_at | timestamp |  |  |  |  |
 | updated_at | timestamp |  |  |  |  |
+UNIQUE(user_id, work_date)
 
 ### attendance_breaksテーブル
 | カラム名 | 型 | primary key | unique key | not null | foreign key |
 | --- | --- | --- | --- | --- | --- |
 | id | bigint | ◯ |  | ◯ |  |
 | attendance_id | bigint |  |  | ◯ | attendances(id) |
-| break_start | time |  |  | ◯ |  |
+| break_start | time |  |  |  |  |
 | break_end | time |  |  |  |  |
 | created_at | timestamp |  |  |  |  |
 | updated_at | timestamp |  |  |  |  |
@@ -95,7 +111,7 @@ make init
 | created_at | timestamp |  |  |  |  |
 | updated_at | timestamp |  |  |  |  |
 
-## attendance_correction_breaksテーブル
+### attendance_correction_breaksテーブル
 | カラム名 | 型 | primary key | unique key | not null | foreign key |
 | --- | --- | --- | --- | --- | --- |
 | id | bigint | ◯ |  | ◯ |  |
@@ -110,4 +126,26 @@ make init
 
 ## テストアカウント
 
+
+### 管理者ユーザー
+| 名前 | メールアドレス | パスワード |
+| --- | --- | --- |
+| 勤怠管理者 | admin@gmail.com | password |
+
+### 一般ユーザー
+
+| 名前 | メールアドレス | パスワード |
+| --- | --- | --- |
+| 西 怜奈 | reina.n@coachtech.com | password |
+| 山田 太郎 | taro.y@coachtech.com | password |
+| 増田 一世 | issei.m@coachtech.com | password |
+| 山本 敬吉 | keikichi.y@coachtech.com | password |
+| 秋田 朋美 | tomomi.a@coachtech.com | password |
+| 中西 教夫 | norio.n@coachtech.com | password |
+
+
 ## php unitテスト
+SQLite のインメモリデータベースを使用してテストを実行しています。
+```bash
+php artisan test
+```
