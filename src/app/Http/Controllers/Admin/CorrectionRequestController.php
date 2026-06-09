@@ -3,28 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\AttendanceCorrection;
 use Illuminate\Support\Facades\DB;
 
 class CorrectionRequestController extends Controller
 {
-    public function index(Request $request)
-    {
-        $page = $request->query('page', 'pending');
-
-        $status = $page === 'approved' ? 'approved' : 'pending';
-
-        $corrections = AttendanceCorrection::with('attendance.user')
-            ->where('status', $status)
-            ->get();
-
-        return view('admin.correction.index', compact(
-            'page',
-            'corrections',
-        ));
-    }
-
     public function show($attendance_correct_request_id)
     {
         $correction = AttendanceCorrection::with('attendance.breaks', 'breaks')
@@ -66,6 +49,6 @@ class CorrectionRequestController extends Controller
 
         });
 
-        return redirect()->route('admin.correction.index')->with('flashSuccess', '勤怠修正申請を承認しました');
+        return redirect()->route('correction.index')->with('flashSuccess', '勤怠修正申請を承認しました');
     }
 }

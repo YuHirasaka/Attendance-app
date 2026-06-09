@@ -11,18 +11,36 @@ class CorrectionRequestController extends Controller
     public function index(Request $request)
     {
         $page = $request->query('page', 'pending');
-        $user = Auth::user();
+        $user = Auth::guard('admin')->user() ?? Auth::user();
+
+        if ($user->role !== 'admin' && ! $user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
 
         $status = $page === 'approved' ? 'approved' : 'pending';
 
-        $attendanceCorrections = AttendanceCorrection::with('attendance.user')
-            ->where('status', $status)
-            ->whereHas('attendance', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->get();
+        $query = AttendanceCorrection::with('attendance.user')
+            ->where('status', $status);
 
-        return view('correction.index', compact('attendanceCorrections', 'page'));
+        if ($user->role !== 'admin') {
+            $query->whereHas('attendance', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+
+        $corrections = $query->get();
+
+        if ($user->role === 'admin') {
+            return view('admin.correction.index', compact(
+                'page',
+                'corrections',
+            ));
+        }
+
+        return view('correction.index', [
+            'attendanceCorrections' => $corrections,
+            'page' => $page,
+        ]);
     }
 
     public function show($attendanceCorrection_id)
@@ -33,8 +51,6 @@ class CorrectionRequestController extends Controller
                 $query->where('user_id', auth()->id());
             })
             ->firstOrFail();
-
-        $attendance = $correction->attendance;
 
         return view('correction.show', [
             'correction' => $correction,

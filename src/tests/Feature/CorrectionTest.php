@@ -124,14 +124,14 @@ class CorrectionTest extends TestCase
 
         $response = $this->actingAs($admin, 'admin')
             ->actingAs($admin)
-            ->get('/admin/stamp_correction_request/approve/' . $correction->id);
+            ->get('/stamp_correction_request/approve/' . $correction->id);
 
         $response->assertStatus(200);
         $response->assertSeeText('休日出勤です');
 
         $response = $this->actingAs($admin, 'admin')
             ->actingAs($admin)
-            ->get('/admin/stamp_correction_request/list?page=pending');
+            ->get('/stamp_correction_request/list?page=pending');
 
         $response->assertSeeText('休日出勤です');
     }

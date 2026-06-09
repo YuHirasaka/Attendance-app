@@ -8,7 +8,7 @@
             @if(Auth::check() && Auth::user()->role === 'user')
             <li class="header__nav-item"><a href="/attendance">勤怠</a></li>
             <li class="header__nav-item"><a href="/attendance/list">勤怠一覧</a></li>
-            <li class="header__nav-item"><a href="/stamp_correction_request/list">申請</a></li>
+            <li class="header__nav-item"><a href="{{ route('correction.index') }}">申請</a></li>
             <li>
                 <form action="/logout" method="post">
                     @csrf
@@ -18,7 +18,7 @@
             @elseif(Auth::check() && Auth::user()->role === 'admin')
             <li class="header__nav-item"><a href="/admin/attendance/list">勤怠一覧</a></li>
             <li class="header__nav-item"><a href="/admin/staff/list">スタッフ一覧</a></li>
-            <li class="header__nav-item"><a href="{{ route('admin.correction.index') }}">申請一覧</a></li>
+            <li class="header__nav-item"><a href="{{ route('correction.index') }}">申請一覧</a></li>
             <li>
                 <form action="/logout" method="post">
                     @csrf
