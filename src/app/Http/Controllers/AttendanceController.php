@@ -38,8 +38,8 @@ class AttendanceController extends Controller
                 ->withErrors(['check_in' => '本日は既に出勤済です']);
         }
 
-        $attendance->update(
-            ['check_in' => now(),
+        $attendance->update([
+            'check_in' => now(),
         ]);
 
         return redirect('/attendance')->with('flashSuccess', '出勤しました！');

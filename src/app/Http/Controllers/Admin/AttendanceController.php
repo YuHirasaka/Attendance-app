@@ -19,8 +19,8 @@ class AttendanceController extends Controller
     {
         $users = User::where('role', 'user')->get();
         $currentDay = request('day')
-        ? Carbon::parse(request('day'))
-        : Carbon::now();
+            ? Carbon::parse(request('day'))
+            : Carbon::now();
 
         $prevDay = $currentDay->copy()
             ->subDay()
@@ -73,7 +73,7 @@ class AttendanceController extends Controller
             ->latest()
             ->first();
 
-        if($correction) {
+        if ($correction) {
             return view('admin.attendance.edit', [
                 'attendance' => $attendance,
                 'user' => $attendance->user,
@@ -131,12 +131,16 @@ class AttendanceController extends Controller
                 }
             }
 
+            AttendanceCorrection::where('attendance_id', $attendance->id)
+                ->where('status', 'pending')
+                ->update([
+                    'status' => 'approved',
+                    'approved_by' => auth('admin')->id(),
+                    'approved_at' => now(),
+                ]);
+
             return $attendance;
         });
-
-        AttendanceCorrection::where('attendance_id', $attendance->id)
-            ->where('status', 'pending')
-            ->update(['status' => 'approved']);
 
         return redirect()->route('admin.attendance.edit', $attendance->id)->with('flashSuccess', '勤怠を更新しました');
     }
