@@ -64,7 +64,7 @@ MAIL_PASSWORD=your_mailtrap_password
 - Mailtrap（メール確認用サンドボックス）：https://mailtrap.io/inboxes
 
 ## テストアカウント
-
+下記ユーザー情報でログインしてください
 
 ### 管理者ユーザー
 | 名前 | メールアドレス | パスワード |
