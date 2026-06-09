@@ -126,11 +126,6 @@ body {
     align-items: center;
 }
 
-.p-flex {
-    display: flex;
-    align-items: center;
-}
-
 .attendance-detail__submit--approved {
     width: 130px;
     height: 50px;
