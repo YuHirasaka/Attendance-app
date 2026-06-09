@@ -78,11 +78,11 @@ body {
 }
 
 .attendance-detail__reason {
-    width: 60%;
+    width: 58%;
     height: 72px;
     resize: none;
     font-size: 14px;
-    margin: 15px 20px;
+    margin: 20px ;
 }
 
 .attendance-detail__button {
