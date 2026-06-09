@@ -4,17 +4,6 @@ body {
     font-weight: bold;
 }
 
-.attendance-detail {
-    width: 900px;
-    margin: 90px auto;
-}
-
-.attendance-detail__heading h1 {
-    border-left: 8px solid #000;
-    padding-left: 20px;
-    color: #000;
-}
-
 .attendance-detail__table {
     width: 100%;
     background: #fff;

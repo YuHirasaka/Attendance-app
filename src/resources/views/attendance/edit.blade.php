@@ -3,15 +3,14 @@
 @section('title', '勤怠詳細')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/list-page.css') }}">
 <link rel="stylesheet" href="{{ asset('css/attendance-edit.css') }}">
 @endsection
 
 @section('content')
 @include('components.header')
-<div class="attendance-detail">
-    <div class="attendance-detail__heading">
-        <h1>勤怠詳細</h1>
-    </div>
+<div class="list-page">
+    <x-page-heading>勤怠詳細</x-page-heading>
     <form action="{{ route('attendance_correction.store') }}" method="post">
         @csrf
         <input type="hidden" name="work_date" value="{{ old('work_date', $workDate->format('Y-m-d')) }}">
