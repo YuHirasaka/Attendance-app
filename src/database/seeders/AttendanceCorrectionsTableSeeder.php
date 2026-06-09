@@ -18,12 +18,13 @@ class AttendanceCorrectionsTableSeeder extends Seeder
      */
     public function run()
     {
+        $admin = User::where('role', 'admin')->first();
         $users = User::where('role', 'user')->get();
 
         foreach ($users as $user) {
             $attendances = Attendance::where('user_id', $user->id)
-            ->take(9)
-            ->get();
+                ->take(9)
+                ->get();
 
             foreach ($attendances->take(3) as $attendance) {
                 AttendanceCorrection::create([
@@ -32,6 +33,8 @@ class AttendanceCorrectionsTableSeeder extends Seeder
                     'requested_check_out' => '18:15',
                     'reason' => '電車遅延のため',
                     'status' => 'approved',
+                    'approved_by' => $admin->id,
+                    'approved_at' => now(),
                 ]);
             }
 
