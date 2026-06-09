@@ -5,7 +5,7 @@
     @if( !in_array(Route::currentRouteName(), ['register', 'login', 'verification.notice']))
     <nav class="header__nav">
         <ul class="header__nav-list">
-            @if(Auth::check() && Auth::user()->role === 'user')
+            @if(Auth::guard('web')->check() && Auth::guard('web')->user()->role === 'user')
             <li class="header__nav-item"><a href="/attendance">勤怠</a></li>
             <li class="header__nav-item"><a href="/attendance/list">勤怠一覧</a></li>
             <li class="header__nav-item"><a href="{{ route('correction.index') }}">申請</a></li>
@@ -15,7 +15,7 @@
                     <button class="header__logout" type="submit">ログアウト</button>
                 </form>
             </li>
-            @elseif(Auth::check() && Auth::user()->role === 'admin')
+            @elseif(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
             <li class="header__nav-item"><a href="/admin/attendance/list">勤怠一覧</a></li>
             <li class="header__nav-item"><a href="/admin/staff/list">スタッフ一覧</a></li>
             <li class="header__nav-item"><a href="{{ route('correction.index') }}">申請一覧</a></li>
