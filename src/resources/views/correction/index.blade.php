@@ -14,11 +14,11 @@
     <div class="correction-list__nav">
         <ul class="correction-list__nav-link">
             <li>
-                <a href="/stamp_correction_request/list?page=pending"
+                <a href="{{ route('correction.index', ['page' => 'pending']) }}"
                 class="{{ request('page') === 'pending' ? 'is-active' : '' }}">承認待ち</a>
             </li>
             <li>
-                <a href="/stamp_correction_request/list?page=approved"
+                <a href="{{ route('correction.index', ['page' => 'approved']) }}"
                 class="{{ request('page') === 'approved' ? 'is-active' : '' }}">承認済み</a>
             </li>
         </ul>

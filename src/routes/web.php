@@ -23,6 +23,17 @@ use App\Http\Controllers\Admin\CorrectionRequestController as AdminCorrectionCon
 |
 */
 
+// 申請一覧（一般ユーザー・管理者共通）
+Route::middleware(['auth:web,admin'])->group(function () {
+    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])->name('correction.index');
+});
+
+// 管理者（承認詳細・承認処理のみ auth:admin）
+Route::middleware(['auth:admin', 'admin'])->group(function () {
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionController::class, 'show'])->name('admin.correction.show');
+    Route::patch('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionController::class, 'update'])->name('admin.correction.update');
+});
+
 // 一般ユーザー
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'show'])->name('attendance.show');
@@ -34,7 +45,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');
     Route::get('/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/stamp_correction_request', [AttendanceController::class, 'store'])->name('attendance_correction.store');
-    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])->name('correction.index');
     Route::get('/stamp_correction_request/{attendanceCorrection_id}', [CorrectionRequestController::class, 'show'])->name('correction.show');
 });
 
@@ -47,18 +57,18 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->group(function () {
     Route::get('/attendance/{id}', [AdminAttendanceController::class, 'edit'])->name('admin.attendance.edit');
     Route::post('/attendance/save', [AdminAttendanceController::class, 'save'])->name('admin.attendance.save');
     Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
-    Route::get('/stamp_correction_request/list', [AdminCorrectionController::class, 'index'])->name('admin.correction.index');
-    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionController::class, 'show'])->name('admin.correction.show');
-    Route::patch('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionController::class, 'update'])->name('admin.correction.update');
 });
 
+// 管理者ログイン
 Route::get('/admin/login', function () {
     return view('admin.login');
 })->name('admin.login');
 
+// 一般ログイン
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 
+// メール認証
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->name('verification.notice');

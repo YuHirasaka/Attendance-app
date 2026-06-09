@@ -17,7 +17,9 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        $user = Auth::guard('admin')->user() ?? Auth::user();
+
+        if ($user && $user->role === 'admin') {
             return $next($request);
         }
         return redirect('/admin/login')->with('error', 'アクセス権限がありません。');
